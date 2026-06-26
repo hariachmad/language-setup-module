@@ -20,11 +20,11 @@ class SioClientWrapper:
         sio = self.sio_client.get_instance().sio
 
         @sio.event
-        def connect():
+        def connect(*args):
             print("Connected with server")
 
         @sio.event
-        def disconnect():
+        def disconnect(*args):
             print("Disconnected from server")
 
         @sio.event
@@ -35,18 +35,18 @@ class SioClientWrapper:
         def error(data):
             print(f"Error: {data}")
         
-        @sio.on('language:get')
-        def on_language_get():
+        @sio.on('LANGUAGE_GET')
+        def on_language_get(*args):
             config = self.load_config()
-            self.emit('language:current', {'success': True, 'data': config})    
+            sio.emit('LANGUAGE_CURRENT', {'lang' : config['language']})    
             
-        @sio.on('language:set')
+        @sio.on('LANGUAGE_SET')
         def on_language_set(payload):
             language = payload.get('lang')
             supported = ['id', 'en', 'sv']
 
             if language not in supported:
-                self.emit('language:set:response', {
+                self.emit('ACK_LANGUAGE_SET', {
             'success': False,
             'error': f'Language "{language}" not supported'
             })
@@ -56,17 +56,8 @@ class SioClientWrapper:
             config['language'] = language
             self.save_config(config)
 
-            self.emit('language:set:response', {'success': True})
-            self.emit('language:updated', {'language': language})
+            sio.emit('ACK_LANGUAGE_SET', {'success': True})
             print(f"[LanguageSetup] Language changed to: {language}")
-            
-    def emit(self, event: str, data: dict = None):
-        """Send event to server"""
-        self.sio_client.emit(event, data)
-
-    def emit_with_callback(self, event: str, data: dict = None, callback=None):
-        """Send event to server with callback"""
-        self.sio_client.emit(event, data, callback=callback)
     
     
 
