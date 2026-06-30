@@ -1,8 +1,12 @@
 import json
 import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONFIG_PATH = BASE_DIR / "config" / "language.json"
 class SioClientWrapper:
     def __init__(self, sio_client):
-        self.CONFIG_PATH = os.getenv('CONFIG_PATH')
+        self.CONFIG_PATH = CONFIG_PATH
         if not self.CONFIG_PATH:
             raise ValueError("CONFIG_PATH environment variable is not set")
         self.sio_client = sio_client
@@ -58,6 +62,3 @@ class SioClientWrapper:
 
             sio.emit('ACK_LANGUAGE_SET', {'success': True})
             print(f"[LanguageSetup] Language changed to: {language}")
-    
-    
-
