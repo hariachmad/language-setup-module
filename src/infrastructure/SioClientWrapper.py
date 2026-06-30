@@ -1,8 +1,7 @@
 import json
-import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = BASE_DIR / "config" / "language.json"
 class SioClientWrapper:
     def __init__(self, sio_client):

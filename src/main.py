@@ -6,7 +6,7 @@ from infrastructure.SioClient import SioClient
 from infrastructure.SioClientWrapper import SioClientWrapper
 
 load_dotenv()
-sio = socketio.Client()
+sio = socketio.Client(logger=True, engineio_logger=True)
 
 if __name__ == '__main__':
     sio_client_instance = SioClient(sio)
